@@ -10,7 +10,10 @@ public class Usuario {
     private String token;
 
     private Boolean admin;
+
+    //region getters e setters
+
 }
 
-//region getters e setters
+
 
