@@ -1,0 +1,21 @@
+package com.bairro.ordemCompra.model;
+
+public enum Setor {
+
+    INFANTIL,
+    ESCOLA,
+    ESP_CULTURAL,
+    OFICINAS_ESPORTIVAS,
+    OFICINAS_CULTURAIS,
+    LABORATORIOS,
+    PSICOSSOCIAL,
+    RECURSOS,
+    RELACIONAMENTO,
+    COZINHA,
+    ADMINISTRATIVO,
+
+    TRANSPORTE,
+    ALMOXARIFADO,
+    RH
+}
+
