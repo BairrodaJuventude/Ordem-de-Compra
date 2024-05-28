@@ -1,6 +1,6 @@
 package com.bairro.ordemCompra.model;
 
-public class LogUser {
+public class LogUsuario {
     private String log_data;
     //region Getters e Setters
     public String getLog_data() {
