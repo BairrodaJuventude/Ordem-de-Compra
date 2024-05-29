@@ -18,12 +18,6 @@ public interface CustomQuerydslPredicateExecutor<T> extends QuerydslPredicateExe
         return this.findAll(booleanBuilder);
     }
     // método que retorna uma página de entidades de acordo com o filtro, a classe da entidade e a paginação
-    /**
-     * @param filter o filtro no formato "campo+operador+valor"
-     * @param entityType a classe da entidade
-     * @param pageable informação da paginação
-     * @return pagina de entidades de acordo com o filtro
-     */
     default Page<T> findAll(String filter, Class<T> entityType, Pageable pageable) {
         BooleanBuilder booleanBuilder = BooleanBuilderUtil.buildPredicateFromFilter(filter, entityType);
         return this.findAll(booleanBuilder, pageable);
