@@ -1,30 +1,52 @@
 package com.bairro.ordemCompra.model;
 
 import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class OrdemDeCompra extends EntityId{
 
+    @NotNull
+    @NotBlank
     @Column(name = "numero", nullable = false)
+    private Integer numero;
+    @NotNull @NotBlank
+    @Column(name = "unidade", nullable = false)
     private Integer unidade;
+    @NotNull @NotBlank
     @Column(name = "quantidade", nullable = false)
     private Integer quantidade;
+    @NotNull @NotBlank
     @Column(name = "descricao", nullable = false)
     private String descricao;
+    @NotNull @NotBlank
     @Column(name = "tipoDespesa", nullable = false)
     private TipoDespesa tipoDespesa;
+    @NotNull @NotBlank
     @Column(name = "valorUnitario", nullable = false)
     private Double valorUnitario;
+    @NotNull @NotBlank
     @Column(name = "valorTotal", nullable = false)
     private Double valorTotal;
+    @NotNull @NotBlank
     @Column(name = "valorCompra", nullable = false)
     private Double valorCompra;
+    @NotNull @NotBlank
     @Column(name = "Fornecedor", nullable = false)
     private String Fornecedor;
+    @NotNull @NotBlank
     @Column(name = "setor", nullable = false)
     private Setor setor;
     @Column(name = "dataCompra", nullable = false)
+    @NotNull @NotBlank
     private String dataCompra;
     //region Getters e Setters
+    public Integer getNumero() {
+        return numero;
+    }
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
     public Integer getUnidade() {
         return unidade;
     }
