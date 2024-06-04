@@ -2,7 +2,9 @@ package com.bairro.ordemCompra.service;
 
 import com.bairro.ordemCompra.model.OrdemDeCompra;
 import com.bairro.ordemCompra.model.Permissao;
+import com.bairro.ordemCompra.model.Usuario;
 import com.bairro.ordemCompra.repository.OrdemDeCompraRepository;
+import com.bairro.ordemCompra.resource.OrdemDeCompraPatchRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,15 +13,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class OrdemDeCompraService {
 
     private ModelMapper modelMapper;
-
     @Autowired
-    private OrdemDeCompraRepository repository;
+    private UsuarioService usuarioService;
+    @Autowired
+    private static OrdemDeCompraRepository repository;
 
-    public OrdemDeCompra salvar(OrdemDeCompra entity) {
+    public static List<OrdemDeCompra> buscaTodosPorToken(String token) {
+        Usuario usuario = usuarioService.buscaPorToken(token);
+        return repository.findByUsuario(usuario);
+    }
+    public static OrdemDeCompra salvar(OrdemDeCompra entity) {
         return repository.save(entity);
     }
 
@@ -37,7 +44,7 @@ public class OrdemDeCompraService {
 
     public OrdemDeCompra alterar(Long id, OrdemDeCompra entity) {
         Optional<OrdemDeCompra> existingOrdemDeCompraOptional = repository.findById(id);
-        if(existingOrdemDeCompraOptional.isEmpty()) {
+        if (existingOrdemDeCompraOptional.isEmpty()) {
             throw new NotFoundException("Ordem de compra não encontrada");
         }
         OrdemDeCompra existingOrdemDeCompra = existingOrdemDeCompraOptional.get();
@@ -45,13 +52,29 @@ public class OrdemDeCompraService {
         return repository.save(existingOrdemDeCompra);
     }
 
+
+    public static OrdemDeCompra patchOrdemDeCompra(OrdemDeCompraPatchRequest ordemDeCompraPatchRequest) {
+
+        OrdemDeCompra ordemDeCompra = repository.findByNumeroAndUsuarioId(ordemDeCompraPatchRequest.getAntigoId(), ordemDeCompraPatchRequest.getUsuario().getId())
+                .orElseThrow(() -> new NotFoundException("Banco não encontrado"));
+
+        Optional<OrdemDeCompra> existingBancoOptional = repository.findByNumeroAndUsuarioId(ordemDeCompraPatchRequest.getNovoId(), ordemDeCompraPatchRequest.getUsuario().getId());
+        if (existingBancoOptional.isPresent()) {
+            throw new RuntimeException("O novo nome já está cadastrado para este usuário.");
+        }
+
+        ordemDeCompra.setNumero(ordemDeCompraPatchRequest.getNovoId());
+        return repository.save(ordemDeCompra);
+    }
+
+
     public void remover(Long id) {
         repository.deleteById(id);
     }
 
     public OrdemDeCompra patch(Long id, OrdemDeCompraPatchRequest patchRequest) {
         Optional<OrdemDeCompra> existingOrdemDeCompraOptional = repository.findById(id);
-        if(existingOrdemDeCompraOptional.isEmpty()) {
+        if (existingOrdemDeCompraOptional.isEmpty()) {
             throw new NotFoundException("Ordem de compra não encontrada");
         }
         OrdemDeCompra existingOrdemDeCompra = existingOrdemDeCompraOptional.get();
@@ -61,16 +84,18 @@ public class OrdemDeCompraService {
 
     public OrdemDeCompra adicionarPermissao(Long id, Permissao permissao) {
         Optional<OrdemDeCompra> existingOrdemDeCompraOptional = repository.findById(id);
-        if(existingOrdemDeCompraOptional.isEmpty()) {
+        if (existingOrdemDeCompraOptional.isEmpty()) {
             throw new NotFoundException("Ordem de compra não encontrada");
         }
         OrdemDeCompra existingOrdemDeCompra = existingOrdemDeCompraOptional.get();
-        existingOrdemDeCompra.getPermissoes().add(permissao);
         return repository.save(existingOrdemDeCompra);
     }
 
     public OrdemDeCompra removerPermissao(Long id, Permissao permissao) {
         Optional<OrdemDeCompra> existingOrdemDeCompraOptional = repository.findById(id);
-        if(existingOrdemDeCompraOptional.isEmpty()) {
-            throw new NotFoundException("Ordem de compra
+        if (existingOrdemDeCompraOptional.isEmpty()) {
+            throw new NotFoundException("Ordem de compra não encontrada");
+        }
+        return null;
+    }
 }

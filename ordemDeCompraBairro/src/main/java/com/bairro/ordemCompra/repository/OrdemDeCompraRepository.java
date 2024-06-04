@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface OrdemDeCompraRepository extends JpaRepository<OrdemDeCompra, Long>, CustomQuerydslPredicateExecutor<OrdemDeCompra> {
-    Optional<OrdemDeCompra> findByOrdemDeCompraAndUsuarioId(String banco, Long usuarioId);
+    Optional<OrdemDeCompra> findByNumeroAndUsuarioId(String numero, Long usuarioId);
     List<OrdemDeCompra> findByUsuario(Usuario usuario);
 }

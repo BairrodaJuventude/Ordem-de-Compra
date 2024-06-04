@@ -3,13 +3,14 @@ package com.bairro.ordemCompra.model;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 public class OrdemDeCompra extends EntityId{
 
     @NotNull
     @NotBlank
     @Column(name = "numero", nullable = false)
-    private Integer numero;
+    private String numero;
     @NotNull @NotBlank
     @Column(name = "unidade", nullable = false)
     private Integer unidade;
@@ -39,12 +40,18 @@ public class OrdemDeCompra extends EntityId{
     private Setor setor;
     @Column(name = "dataCompra", nullable = false)
     @NotNull @NotBlank
-    private String dataCompra;
+    private LocalDateTime data;
     //region Getters e Setters
-    public Integer getNumero() {
+    public LocalDateTime getData() {
+        return data;
+    }
+    public void setData(LocalDateTime data) {
+        this.data = data;
+    }
+    public String getNumero() {
         return numero;
     }
-    public void setNumero(Integer numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
     public Integer getUnidade() {
@@ -100,12 +107,6 @@ public class OrdemDeCompra extends EntityId{
     }
     public void setSetor(Setor setor) {
         this.setor = setor;
-    }
-    public String getDataCompra() {
-        return dataCompra;
-    }
-    public void setDataCompra(String dataCompra) {
-        this.dataCompra = dataCompra;
     }
     //endregion
 }
