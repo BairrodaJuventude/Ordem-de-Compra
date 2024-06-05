@@ -21,10 +21,6 @@ public class UsuarioService {
         String senhaCriptografada = BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt());
         usuario.setPassword(senhaCriptografada);
 
-        // Gera um token aleatório
-        String token = GeraTokens.gerarToken();
-        usuario.setToken(token);
-
         // Salva os dados do usuario juntamente com o token
         return repository.save(usuario);
     }
@@ -60,14 +56,14 @@ public class UsuarioService {
         return repository.save(existingUsuario);
     }
 
-    public String autenticar(String usernameOuEmail, String password) {
+    public boolean autenticar(String usuarioOuEmail, String password) {
         Optional<Usuario> usuarioOptional;
 
         // Verifica se o valor fornecido é um email
-        if (usernameOuEmail.contains("@")) {
-            usuarioOptional = repository.findByEmail(usernameOuEmail);
+        if (usuarioOuEmail.contains("@")) {
+            usuarioOptional = repository.findByEmail(usuarioOuEmail);
         } else {
-            usuarioOptional = repository.findByUsername(usernameOuEmail);
+            usuarioOptional = repository.findByUsuario(usuarioOuEmail);
         }
 
         if (usuarioOptional.isPresent()) {
@@ -75,7 +71,7 @@ public class UsuarioService {
 
             // Aqui, você verifica se a senha enviada é igual à senha no banco de dados
             if (BCrypt.checkpw(password, usuario.getPassword())) {
-                return usuario.getToken();
+                return true;
             }
         }
 

@@ -1,21 +1,38 @@
 package com.bairro.ordemCompra.model;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+//import javax.validation.constraints.Max;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-public enum Setor {
+@Entity
+public class Setor extends EntityId {
 
-    INFANTIL,
-    ESCOLA,
-    ESP_CULTURAL,
-    OFICINAS_ESPORTIVAS,
-    OFICINAS_CULTURAIS,
-    LABORATORIOS,
-    PSICOSSOCIAL,
-    RECURSOS,
-    RELACIONAMENTO,
-    COZINHA,
-    ADMINISTRATIVO,
+    @NotNull
+    @Column(name = "cat_setor", columnDefinition = "BIT", nullable = false)
+    private Boolean setor;
 
-    TRANSPORTE,
-    ALMOXARIFADO,
-    RH
+    @NotNull @Enumerated(EnumType.STRING)
+    @Column(name = "tp_Setores", nullable = false, length = 50)
+    private Setores setores;
+
+    public Setores getSetores() {
+        return setores;
+    }
+
+    public void setSetores(Setores setores) {
+        this.setores = setores;
+    }
+
+    public Boolean getSetor() {
+        return setor;
+    }
+
+    public void setSetor(Boolean setor) {
+        this.setor = setor;
+    }
+
+    //endregion
 }
-

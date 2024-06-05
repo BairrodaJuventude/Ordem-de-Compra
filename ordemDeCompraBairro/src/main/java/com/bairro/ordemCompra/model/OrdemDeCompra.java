@@ -22,7 +22,7 @@ public class OrdemDeCompra extends EntityId{
     private String descricao;
     @NotNull @NotBlank
     @Column(name = "tipoDespesa", nullable = false)
-    private TipoDespesa tipoDespesa;
+    private TiposDespesas tipoDespesa;
     @NotNull @NotBlank
     @Column(name = "valorUnitario", nullable = false)
     private Double valorUnitario;
@@ -72,10 +72,10 @@ public class OrdemDeCompra extends EntityId{
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    public TipoDespesa getTipoDespesa() {
+    public TiposDespesas getTipoDespesa() {
         return tipoDespesa;
     }
-    public void setTipoDespesa(TipoDespesa tipoDespesa) {
+    public void setTipoDespesa(TiposDespesas tipoDespesa) {
         this.tipoDespesa = tipoDespesa;
     }
     public Double getValorUnitario() {

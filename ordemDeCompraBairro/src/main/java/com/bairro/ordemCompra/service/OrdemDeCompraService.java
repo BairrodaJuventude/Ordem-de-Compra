@@ -1,7 +1,7 @@
 package com.bairro.ordemCompra.service;
 
 import com.bairro.ordemCompra.model.OrdemDeCompra;
-import com.bairro.ordemCompra.model.Permissao;
+import com.bairro.ordemCompra.model.Permissoes;
 import com.bairro.ordemCompra.model.Usuario;
 import com.bairro.ordemCompra.repository.OrdemDeCompraRepository;
 import com.bairro.ordemCompra.resource.OrdemDeCompraPatchRequest;
@@ -18,7 +18,7 @@ public class OrdemDeCompraService {
 
     private ModelMapper modelMapper;
     @Autowired
-    private UsuarioService usuarioService;
+    private static UsuarioService usuarioService;
     @Autowired
     private static OrdemDeCompraRepository repository;
 
@@ -82,7 +82,7 @@ public class OrdemDeCompraService {
         return repository.save(existingOrdemDeCompra);
     }
 
-    public OrdemDeCompra adicionarPermissao(Long id, Permissao permissao) {
+    public OrdemDeCompra adicionarPermissao(Long id, Permissoes permissao) {
         Optional<OrdemDeCompra> existingOrdemDeCompraOptional = repository.findById(id);
         if (existingOrdemDeCompraOptional.isEmpty()) {
             throw new NotFoundException("Ordem de compra não encontrada");
@@ -91,7 +91,7 @@ public class OrdemDeCompraService {
         return repository.save(existingOrdemDeCompra);
     }
 
-    public OrdemDeCompra removerPermissao(Long id, Permissao permissao) {
+    public OrdemDeCompra removerPermissao(Long id, Permissoes permissao) {
         Optional<OrdemDeCompra> existingOrdemDeCompraOptional = repository.findById(id);
         if (existingOrdemDeCompraOptional.isEmpty()) {
             throw new NotFoundException("Ordem de compra não encontrada");
