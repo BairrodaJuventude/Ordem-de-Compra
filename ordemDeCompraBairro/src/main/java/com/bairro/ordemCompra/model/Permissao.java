@@ -17,7 +17,8 @@ public class Permissao extends EntityId {
     @Column(name = "tp_permissao", nullable = false, length = 50)
     private Permissoes permissoes;
 
-    public @NotNull Permissoes getPermissoes() {
+    @NotNull
+    public Permissoes getPermissoes() {
         return permissoes;
     }
 

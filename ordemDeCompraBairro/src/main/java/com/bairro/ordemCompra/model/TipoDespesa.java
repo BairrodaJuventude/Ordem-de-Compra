@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 public class TipoDespesa extends EntityId {
 
     @NotNull
-    @Column(name = "cat_tipo_despesa", columnDefinition = "BIT", nullable = false)
-    private Boolean tipoDespesa;
+    @Column(name = "tipo_despesa", nullable = false)
+    private int tipoDespesa;
 
     @NotNull @Enumerated(EnumType.STRING)
     @Column(name = "tp_tipos_despesas", nullable = false, length = 50)
@@ -25,11 +25,11 @@ public class TipoDespesa extends EntityId {
         this.tiposDespesas = tiposDespesas;
     }
 
-    public Boolean getTipoDespesa() {
+    public int getTipoDespesa() {
         return tipoDespesa;
     }
 
-    public void setTipoDespesa(Boolean tipoDespesa) {
+    public void setTipoDespesa(int tipoDespesa) {
         this.tipoDespesa = tipoDespesa;
     }
 

@@ -26,16 +26,16 @@ public class UsuarioService {
     }
 
 
-    public Usuario buscaPorToken(String token) {
-        Optional<Usuario> usuarioOptional = repository.findByToken(token);
+    public Usuario buscaPorUsuario(String usuario) {
+        Optional<Usuario> usuarioOptional = repository.findByUsuario(usuario);
         if (usuarioOptional.isEmpty()) {
             throw new NotFoundException("Usuário não encontrado");
         }
         return usuarioOptional.get();
     }
 
-    public Usuario alterarSenhaPorToken(String token, String senhaAtual, String novaSenha) {
-        Optional<Usuario> existingUsuarioOptional = repository.findByToken(token);
+    public Usuario alterarSenha(String usuario, String senhaAtual, String novaSenha) {
+        Optional<Usuario> existingUsuarioOptional = repository.findByUsuario(usuario);
         if (existingUsuarioOptional.isEmpty()) {
             throw new NotFoundException("Usuário não encontrado");
         }

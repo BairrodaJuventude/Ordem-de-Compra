@@ -39,10 +39,6 @@ public class Usuario extends EntityId {
     public String getToken() {
         return token;
     }
-    public String setToken(String token) {
-        this.token = token;
-        return token;
-    }
     //endregion
 }
 

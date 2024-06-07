@@ -63,10 +63,10 @@ public class UsuarioDTO {
         return usuarios.stream().map(usuario -> fromEntity(usuario)).collect(Collectors.toList());
     }
 
-//    public static Page<UsuarioDTO> fromEntity(Page<Usuario> usuarios) {
-//        List<UsuarioDTO> usuariosFind = usuarios.stream().map(usuario -> fromEntity(usuario)).collect(Collectors.toList());
-//        Page<UsuarioDTO> usuariosDTO = new PageImpl<>(usuariosFind, usuarios.getPageable(), usuarios.getTotalElements());
-//        return usuariosDTO;
-//    }
+    public static Page<UsuarioDTO> fromEntity(Page<Usuario> usuarios) {
+        List<UsuarioDTO> usuariosFind = usuarios.stream().map(usuario -> fromEntity(usuario)).collect(Collectors.toList());
+        Page<UsuarioDTO> usuariosDTO = new PageImpl<>(usuariosFind, usuarios.getPageable(), usuarios.getTotalElements());
+        return usuariosDTO;
+    }
     //endregion
 }

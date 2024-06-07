@@ -22,10 +22,6 @@ public class OrdemDeCompraService {
     @Autowired
     private static OrdemDeCompraRepository repository;
 
-    public static List<OrdemDeCompra> buscaTodosPorToken(String token) {
-        Usuario usuario = usuarioService.buscaPorToken(token);
-        return repository.findByUsuario(usuario);
-    }
     public static OrdemDeCompra salvar(OrdemDeCompra entity) {
         return repository.save(entity);
     }
@@ -51,12 +47,18 @@ public class OrdemDeCompraService {
         modelMapper.map(entity, existingOrdemDeCompra);
         return repository.save(existingOrdemDeCompra);
     }
-
+    public static Usuario buscaPorUsuario(String usuario) {
+        Optional<Usuario> usuarioOptional = repository.findByUsuario(usuario);
+        if (usuarioOptional.isEmpty()) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+        return usuarioOptional.get();
+    }
 
     public static OrdemDeCompra patchOrdemDeCompra(OrdemDeCompraPatchRequest ordemDeCompraPatchRequest) {
 
         OrdemDeCompra ordemDeCompra = repository.findByNumeroAndUsuarioId(ordemDeCompraPatchRequest.getAntigoId(), ordemDeCompraPatchRequest.getUsuario().getId())
-                .orElseThrow(() -> new NotFoundException("Banco não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Ordem de compra não encontrada"));
 
         Optional<OrdemDeCompra> existingBancoOptional = repository.findByNumeroAndUsuarioId(ordemDeCompraPatchRequest.getNovoId(), ordemDeCompraPatchRequest.getUsuario().getId());
         if (existingBancoOptional.isPresent()) {

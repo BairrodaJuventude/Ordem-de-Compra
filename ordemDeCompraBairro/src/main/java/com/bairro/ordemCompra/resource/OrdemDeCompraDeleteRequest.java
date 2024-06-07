@@ -6,7 +6,6 @@ public class OrdemDeCompraDeleteRequest extends OrdemDeCompra {
     private String Id;
     private UsuarioDTO usuario;
 
-
     public UsuarioDTO getUsuario() {
         return usuario;
     }

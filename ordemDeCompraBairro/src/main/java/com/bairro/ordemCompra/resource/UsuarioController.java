@@ -73,10 +73,10 @@ public class UsuarioController extends AbstractController {
         }
     }
 
-    @GetMapping("{token}")
-    public ResponseEntity<?> findByToken(@PathVariable("token") String token) {
+    @GetMapping("{usuario}")
+    public ResponseEntity<?> findByUsuario(@PathVariable("usuario") String usuario) {
         try {
-            Usuario usuario = service.buscaPorToken(token);
+            service.buscaPorUsuario(usuario);
             return ResponseEntity.ok(usuario);
         } catch (HttpClientErrorException.NotFound nfe) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário não encontrado");
@@ -94,7 +94,7 @@ public class UsuarioController extends AbstractController {
             String senhaAtual = requestBody.get("senha_antiga");
             String novaSenha = requestBody.get("password");
 
-            Usuario alterado = service.alterarSenhaPorToken(token, senhaAtual, novaSenha);
+            Usuario alterado = service.alterarSenha(token, senhaAtual, novaSenha);
 
             return ResponseEntity.ok("Senha atualizada com sucesso");
         } catch (SenhaInvalidaException sie) {
