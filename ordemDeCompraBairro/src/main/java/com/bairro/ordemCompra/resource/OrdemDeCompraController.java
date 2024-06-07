@@ -2,18 +2,27 @@ package com.bairro.ordemCompra.resource;
 
 import com.bairro.ordemCompra.model.OrdemDeCompra;
 import com.bairro.ordemCompra.model.Usuario;
+import com.bairro.ordemCompra.service.NotFoundException;
 import com.bairro.ordemCompra.service.OrdemDeCompraService;
 import com.bairro.ordemCompra.service.UsuarioService;
+import com.bairro.ordemCompra.util.GeraTokens;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/banco")
@@ -24,53 +33,51 @@ public class OrdemDeCompraController extends AbstractController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("{token}")
-    public ResponseEntity<?> findAllByToken(@PathVariable("token") String token) {
-        try {
-            Usuario usuario = usuarioService.buscaPorToken(token);
-            List<OrdemDeCompraDTO> ordensDeCompraDTO = com.bairro.ordemCompra.service.OrdemDeCompraService.buscaTodosPorToken(token).stream()
-                    .map(ordemDeCompra -> new OrdemDeCompraDTO(ordemDeCompra.getId(), ordemDeCompra.getNumero(), ordemDeCompra.getData()))
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.ok(ordensDeCompraDTO);
-        } catch (HttpClientErrorException.NotFound nfe) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao buscar os bancos");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar os bancos");
-        }
-    }
 
     @PostMapping
     public ResponseEntity<OrdemDeCompra> create(@RequestBody @Valid OrdemDeCompra entity) {
-        OrdemDeCompra save = com.bairro.ordemCompra.service.OrdemDeCompraService.salvar(entity);
+        OrdemDeCompra save = OrdemDeCompraService.salvar(entity);
         return ResponseEntity.created(URI.create("/api/banco/" + entity.getId())).body(save);
     }
 
-    @PatchMapping
-    public ResponseEntity<?> updateBanco(@RequestBody OrdemDeCompraPatchRequest ordemDeCompraPatchRequest) {
+    @GetMapping
+    public ResponseEntity<Page<OrdemDeCompraDTO>> findAll(@RequestParam(required = false) String filter,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "15") int size) {
+        Page<OrdemDeCompra> ordensDeCompra = OrdemDeCompraService.buscaTodos(filter, PageRequest.of(page, size));
+        Page<OrdemDeCompraDTO]> ordensDeCompraDTO = OrdemDeCompraDTO.fromEntity((OrdemDeCompra) ordensDeCompra);
+        return ResponseEntity.ok(ordensDeCompra);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<OrdemDeCompra> findById(@PathVariable("id") Long id) {
+        OrdemDeCompra banco = OrdemDeCompraService.buscaPorId(id);
+        return ResponseEntity.ok(banco);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<OrdemDeCompra> update(@PathVariable("id") Long id, @RequestBody OrdemDeCompra entity) {
         try {
-            // Validar se o ID do usuário está presente
-            if (ordemDeCompraPatchRequest.getUsuario() == null || ordemDeCompraPatchRequest.getUsuario().getId() == null) {
-                return ResponseEntity.badRequest().body("ID do usuário é obrigatório.");
-            }
+            OrdemDeCompra alterado = OrdemDeCompraService.alterar(id, entity);
+            return ResponseEntity.ok().body(alterado);
+        }
+        catch (NotFoundException nfe) {
+            return ResponseEntity.noContent().build();
+        }
+    }
 
-            // Validar se a ordem de compra antiga esta presente
-            if (ordemDeCompraPatchRequest.getAntigoId() == null || ordemDeCompraPatchRequest.getAntigoId().isEmpty()) {
-                return ResponseEntity.badRequest().body("Nome do banco antigo é obrigatório.");
-            }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String username = req.getParameter("username");
+        String password = req.getParameter("password");
 
-            // Validar se a nova ordem de compra esta presente
-            if (ordemDeCompraPatchRequest.getNovoId() == null || ordemDeCompraPatchRequest.getNovoId().isEmpty()) {
-                return ResponseEntity.badRequest().body("Nome do banco novo é obrigatório.");
-            }
-
-            // Usar o serviço para realizar as validações e fazer o patch
-            OrdemDeCompra updatedBanco = com.bairro.ordemCompra.service.OrdemDeCompraService.patchOrdemDeCompra(ordemDeCompraPatchRequest);
-
-            // Retornar o banco atualizado
-            return ResponseEntity.ok(OrdemDeCompraDTO.fromEntity(updatedBanco));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar o banco.");
+        boolean autenticador = usuarioService.autenticar(username, password);
+        if (autenticador) {
+            // Gera o token JWT
+            String token = GeraTokens.gerarToken(username);
+            resp.setHeader("Authorization", "Bearer " + token);
+        } else {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 }
