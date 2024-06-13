@@ -18,8 +18,6 @@ public class OrdemDeCompraService {
 
     private ModelMapper modelMapper;
     @Autowired
-    private static UsuarioService usuarioService;
-    @Autowired
     private static OrdemDeCompraRepository repository;
 
     public static OrdemDeCompra salvar(OrdemDeCompra entity) {
